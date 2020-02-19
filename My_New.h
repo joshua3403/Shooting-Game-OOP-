@@ -49,7 +49,10 @@ namespace MemoryControl {
 	public:
 		List()
 		{
-
+			head = new Node;
+			tail = new Node;
+			head->Next = tail;
+			iNodeSize = 0;
 		}
 
 		bool IsEmpty()
@@ -62,7 +65,6 @@ namespace MemoryControl {
 
 		bool Push_Back(void* ptr, int Size, bool isArray,const char* fileName, int Line)
 		{
-			std::cout << "Here" << std::endl;
 			// 노드를 생성자를 통해 생성하고 포인터또한 생성한다.
 			Node* newNode = (Node*)malloc(sizeof(Node));
 
@@ -124,9 +126,10 @@ namespace MemoryControl {
 			// 찾고자 하는 노드가 헤드라면
 			if (NowNode->pPtr == ((Node*)ptr)->pPtr)
 			{
-				head = head->Next;
+				Node* temp = head->Next;
 				head = nullptr;
 				delete head;
+				head = temp;
 				iNodeSize--;
 				return true;
 			}

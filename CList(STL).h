@@ -4,192 +4,177 @@
 template <typename T>
 class CList
 {
-
 	class Node
 	{
 	public:
-		T _data;
+		T data;
 		Node* _Prev;
 		Node* _Next;
-
+	public:
 		Node(T data = 0)
 		{
-			_data = data;
-			_Prev = nullptr;
-			_Next = nullptr;
+			this->data = data;
+			_Prev = _Next = nullptr;
 		}
 	};
 
-public:
+	int _size = 0;
+	Node* head;
+	Node* tail;
 
+public:
 	class iterator
 	{
-	private:
+	private :
 		Node* _node;
 		friend class CList;
 	public:
-		iterator(Node* node = nullptr)
+		iterator(Node* node = 0)
 		{
 			this->_node = node;
 		}
 
-		// 후위 증감 연산
-		iterator operator ++(int)
-		{
-			iterator temp(this);
-			
-			this->_node = this->_node->_Next;
-			return temp;
-		}
-
-		// 전위 증감 연산
-		iterator operator ++()
-		{
-			this->_node = this->_node->_Next;
-			return *this;
-		}
-
-		// 후위 감소 연산
-		iterator operator--(int)
-		{
-			iterator temp(this);
-			this->_node = this->_node->_Prev;
-			return temp;
-		}
-
-		// 전위 감소 연산
-		iterator operator--()
-		{
-			this->_node = this->_node->_Prev;
-			return *this;
-		}
-
-		// 포인터 연산
 		const T& operator *()
 		{
-			return this->_node->_data;
+			return _node->data;
 		}
 
-		// 복사 생성자
-		iterator(const iterator& it)
+		operator Node* ()
 		{
-			_node = it._node;
+			return _node;
 		}
 
-		// 대입 연산자
-		void operator =(iterator it)
+		iterator& operator ++()
 		{
-			_node = it._node;
+			_node = _node->_Next;
+			return (*this);
 		}
 
-		const bool operator == (iterator it)
+		iterator& operator --()
 		{
-			return _node == it._node;
+			_node = _node->_Prev;
+			return (*this);
 		}
 
-		const bool operator != (iterator it)
+		const iterator operator++(int)
 		{
-			return _node != it._node;
+			iterator temp(*this);
+			_node = _node->_Next;
+			return temp;
+		}
+
+		const iterator operator--(int)
+		{
+			iterator temp(*this);
+			_node = _node->_Prev;
+			return temp;
+		}
+
+		bool operator !=(const iterator& iter) const
+		{
+			return _node != iter._node;
+		}
+
+		bool operator ==(const iterator& iter) const
+		{
+			return _node == iter._node;
 		}
 	};
 
+	typedef iterator const_iterator;
+
 public:
-	CList() : _size(0)
+	CList()
 	{
-		_head = new Node();
-		_tail = new Node();
-		_head->_Next = _tail;
-		_tail->_Prev = _head;
+		head = new Node();
+		tail = new Node();
+		head->_Next = tail;
+		tail->_Prev = head;
+		_size = 0;
 	}
 
 	~CList()
 	{
 		clear();
-	}
-
-	iterator begin()
-	{
-		return iterator(_head);
-	}
-	iterator end()
-	{
-		return iterator(_tail);
+		delete head;
+		delete tail;
 	}
 
 	void push_back(T data)
 	{
+		insert(end(), data);
+	}
+
+	void insert(iterator itor, T data)
+	{
 		Node* newNode = new Node(data);
-		
-		if (_size == 0)
-		{
-			newNode->_Next = _tail;
-			_tail->_Prev = newNode;
-			_head = newNode;
-		}
-		else
-		{
-			newNode->_Prev = _tail;
-			_tail->_Next = newNode;
-			_tail = newNode;
-		}
-		++_size;
+		Node* temp = itor;
+
+		newNode->_Next = temp;
+		newNode->_Prev = temp->_Prev;
+		temp->_Prev->_Next = newNode;
+		temp->_Prev = newNode;
+
+		_size++;
 	}
 
 	void clear()
 	{
-		iterator itor(begin());
-		Node* current = begin()._node;
-		while (_size != 0)
+		iterator iter(begin());
+		for (iter; iter != end(); )
 		{
-			Node* temp = current->_Next;
-			delete current;
-			current = temp;
+			iter = erase(iter);
+		}
+	}
+
+	iterator erase(iterator it)	
+	{
+
+		if (_size > 0)
+		{
+
+			Node* pPos = it._node;
+			if (pPos->_Prev)
+				pPos->_Prev->_Next = pPos->_Next;
+			if (pPos->_Next)
+				pPos->_Next->_Prev = pPos->_Prev;
+
+			Node* pCurrnet = pPos->_Next;
+			delete pPos;
+			it = pCurrnet;
 			_size--;
 		}
-		
+		return it;
 	}
 
-	int size()
+	iterator begin()
 	{
-		return _size;
-	};
-
-	bool empty()
-	{
-		if (_size > 0)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	};
-
-	iterator erase(iterator itor)
-	{
-		if (_size > 0)
-		{
-			Node* node = itor._node;
-			if (node->_Prev)		// 삭제하고자 하는 노드의 전 노드가 존재한다면
-				node->_Prev->_Next = node->_Next;
-			if (node->_Next)		// 삭제하고자 하는 노드의 다음 노드가 존재한다면
-				node->_Next->_Prev = node->_Prev;
-
-			Node* pCurrent = node->_Next;
-			delete node;
-			itor = pCurrent;
-			--_size;
-		}
-
-		return itor;
+		iterator it(head->_Next);
+		return it;
 	}
 
+	iterator end()
+	{
+		iterator it(tail);
+		return it;
+	}
 
-private:
-	int _size = 0;
-	Node* _head;
-	Node* _tail;
+	const_iterator begin()const
+	{
+		iterator iter(head->next);
+		return iter;
+	}
+	
+	const_iterator end()const
+	{
+		iterator iter(tail);
+		return iter;
+	}
+
+	int GetSize()
+	{
+		return this->_size;
+	}
 };
 
 

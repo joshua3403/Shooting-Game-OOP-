@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "Console.h"
+#include "stdafx.h"
 
 HANDLE  hConsole;
 
@@ -66,7 +67,7 @@ void cs_MoveCursor(int iPosX, int iPosY)
 //-------------------------------------------------------------
 void cs_ClearScreen(void)
 {
-	int iCountX, iCountY;
+	//int iCountX, iCountY;
 	DWORD dw;
 
 	FillConsoleOutputCharacter(GetStdHandle(STD_OUTPUT_HANDLE), ' ', 100*100, { 0, 0 }, &dw);

@@ -18,6 +18,7 @@ struct sObjectPosition
 
 class CBaseObject
 {
+
 protected:
 	// 오브젝트 속성
 	eObjectType ObjectType;
@@ -49,17 +50,25 @@ public:
 		cDisplay = Display;
 	}
 
-	virtual ~CBaseObject()
-	{
-	};
+	virtual ~CBaseObject();
 
-	virtual bool Action()
-	{
 
-	};
+	virtual bool Action() = 0;
 
-	virtual void Render()
-	{
+	virtual void Render() = 0;
 
-	};
+	// 오브젝트의 타입을 반환
+	eObjectType GetObjectType();
+
+	// 오브젝트의 위치 구조체를 반환
+	sObjectPosition GetObjectPosition();
+
+	// 오브젝트의 데미지를 반환
+	int GetDamage();
+
+	// 데미지를 인수로 받아 hp에서 차감
+	void GetDamageFromObject(int damage);
+
+	// 오브젝트의 체력을 반환
+	int GetHp();
 };

@@ -1,23 +1,32 @@
 #include "stdafx.h"
 #include "CPlayerObejct.h"
+#include "CBulletObject.h"
 
 bool CPlayerObject::Action()
 {
-	for (const auto input : l_Player_Input)
+	CList<int>::iterator itor = l_Player_Input.begin();
+	while(true)
 	{
+		if (itor == l_Player_Input.end())
+		{
+			break;
+		}
+		int input = (*itor);
 		switch (input)
 		{
-		case KeyInput::DOWN:
+		case static_cast<int>(KeyInput::DOWN):
 			this->s_RelativePosition.iY++;
 			break;
-		case KeyInput::UP:
+		case static_cast<int>(KeyInput::UP):
 			this->s_RelativePosition.iY--;
 			break;
-		case KeyInput::LEFT:
+		case static_cast<int>(KeyInput::LEFT):
 			this->s_RelativePosition.iX--;
 			break;
-		case KeyInput::RIGHT:
+		case static_cast<int>(KeyInput::RIGHT):
 			this->s_RelativePosition.iX++;
+			break;
+		default :
 			break;
 		}
 
@@ -34,8 +43,9 @@ bool CPlayerObject::Action()
 		if (this->s_RelativePosition.iY <= dfSCREEN_HEIGHT - 5)
 			this->s_RelativePosition.iY = dfSCREEN_HEIGHT - 5;
 
-
+		itor = l_Player_Input.erase(itor);
 	}
+
 	return true;
 }
 
@@ -47,4 +57,8 @@ void CPlayerObject::Render()
 	{
 		pGameScene->ScreenBuffer[this->s_RelativePosition.iY][this->s_RelativePosition.iX] = ' ';
 	}
+}
+
+CPlayerObject::~CPlayerObject()
+{
 }

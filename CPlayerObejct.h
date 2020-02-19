@@ -30,8 +30,10 @@ public:
 
 	void Render();
 
+	~CPlayerObject();
+
 
 public:
-	static CList<KeyInput> l_Player_Input;
+	CList<int> l_Player_Input;
 
 };

@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "CBaseScene.h"
 
+CBaseScene::~CBaseScene()
+{
+}
+
 void CBaseScene::Buffer_Clear(void)
 {
 	for (int i = 0; i < dfSCREEN_HEIGHT; ++i)
