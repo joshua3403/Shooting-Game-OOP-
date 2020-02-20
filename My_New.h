@@ -30,7 +30,6 @@ namespace MemoryControl {
 
 		~Node()
 		{
-			std::cout << "Node deleted" << std::endl;
 		}
 
 	};
@@ -79,6 +78,7 @@ namespace MemoryControl {
 
 			if (IsEmpty())
 			{
+				newNode->Next = tail;
 				head = newNode;
 			}
 			else
@@ -295,7 +295,6 @@ namespace MemoryControl {
 				return;
 			}
 
-			int index;
 			Node* findNode = MemoryAllocList->Find(ptr);
 			Node* findArrayNode = MemoryAllocList->Find((void*)((int*)ptr - 2));
 
@@ -312,7 +311,7 @@ namespace MemoryControl {
 				goto FREEARRAY;
 			}
 
-			if (findNode != nullptr && findNode == nullptr)
+			if (findNode != nullptr && findArrayNode == nullptr)
 			{
 				current_alloc_index = (MemoryAllocList->iNodeSize + current_free_index) % MAX_TRACE_ALLOC_COUNT;
 				++free_count;
@@ -349,30 +348,31 @@ namespace MemoryControl {
 // 링크드 리스트로 만들 경우 생성자에서는 new 가 아닌 malloc을 사용해야 한다
 // 파일은 열고 쓰고 닫고.
 
-void* operator new(size_t size, const char* fileName, int line)
+
+void* operator new(size_t size, const char* fileName, int line) throw()
 {
 	return MemoryControl::c_Memory_Controler.Alloc(size, fileName, line, false);
 }
 
-void* operator new[](size_t size, const char* fileName, int line)
+void* operator new[](size_t size, const char* fileName, int line) throw()
 {
 	return MemoryControl::c_Memory_Controler.Alloc(size, fileName, line, true);
 }
 
-void operator delete(void* ptr)
+void operator delete(void* ptr) throw()
 {
 	return MemoryControl::c_Memory_Controler.Free(ptr);
 }
 
-void operator delete[](void* ptr)
+void operator delete[](void* ptr) throw()
 {
 	return operator delete(ptr);
 }
 
-void operator delete (void* p, char* File, int Line)
+void operator delete (void* p, const char* File, int Line)
 {
 }
-void operator delete[](void* p, char* File, int Line)
+void operator delete[](void* p, const char* File, int Line)
 {
 }
 

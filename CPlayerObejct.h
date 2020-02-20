@@ -4,6 +4,8 @@
 #include "CList(STL).h"
 #include "CGameScene.h"
 
+#define MAX_HP 5
+
 // 키보드 입력을 구분할 열거체
 enum class KeyInput
 {

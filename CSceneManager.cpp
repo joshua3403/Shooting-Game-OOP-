@@ -20,7 +20,7 @@ CBaseScene* CSceneManager::GetScenePointer()
 	return pScene;
 }
 
-void CSceneManager::PlayerWin()
+void CSceneManager::StageClear()
 {
 	iStage++;
 }
@@ -28,4 +28,9 @@ void CSceneManager::PlayerWin()
 int CSceneManager::GetStage()
 {
 	return this->iStage;
+}
+
+void CSceneManager::Reset()
+{
+	iStage = 1;
 }

@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "CLoadingScene.h"
 
-CLoadingScene::CLoadingScene() : bLoadingSceneEnd(false)
+CLoadingScene::CLoadingScene(int stage) : bLoadingSceneEnd(false), Stage(stage)
 {
+	cs_ClearScreen();
 	QueryPerformanceFrequency(&fFreq);
 	QueryPerformanceCounter(&start);
+	PrintStageInfo();
+	Stage = 0;
 }
 
 CLoadingScene::~CLoadingScene()
@@ -35,7 +38,15 @@ void CLoadingScene::PrintOne()
 	for (int i = 0; i < dfSCREEN_HEIGHT; ++i)
 	{
 		cs_MoveCursor(0, i);
-		printf(One[i]);
+		if (i == 18)
+		{
+			printf(StageInfo);
+		}
+		else
+		{
+			printf(One[i]);
+
+		}
 	}
 }
 
@@ -44,7 +55,15 @@ void CLoadingScene::PrintTwo()
 	for (int i = 0; i < dfSCREEN_HEIGHT; ++i)
 	{
 		cs_MoveCursor(0, i);
-		printf(Two[i]);
+		if (i == 18)
+		{
+			printf(StageInfo);
+		}
+		else
+		{
+			printf(Two[i]);
+
+		}
 	}
 }
 
@@ -53,7 +72,14 @@ void CLoadingScene::PrintThree()
 	for (int i = 0; i < dfSCREEN_HEIGHT; ++i)
 	{
 		cs_MoveCursor(0, i);
-		printf(Three[i]);
+		if (i == 18)
+		{
+			printf(StageInfo);
+		}
+		else
+		{
+			printf(Three[i]);
+		}
 	}
 }
 
@@ -65,3 +91,9 @@ bool CLoadingScene::GetLoadingSceneEnd()
 void CLoadingScene::Sprite_Draw()
 {
 }
+
+void CLoadingScene::PrintStageInfo()
+{
+	sprintf(StageInfo, "                                      STAGE : %d                                  \0", this->Stage);
+}
+

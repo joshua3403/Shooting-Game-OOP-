@@ -46,6 +46,9 @@ bool CPlayerObject::Action()
 		itor = l_Player_Input.erase(itor);
 	}
 
+
+	if (this->iHp > MAX_HP)
+		iHp = MAX_HP;
 	return true;
 }
 

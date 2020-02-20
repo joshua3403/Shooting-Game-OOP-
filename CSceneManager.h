@@ -3,6 +3,7 @@
 #include "CBaseScene.h"
 #include "CList(STL).h"
 
+#define MAX_STAGE 2
 
 class CSceneManager
 {
@@ -13,7 +14,7 @@ private:
 
 private:
 
-	CSceneManager() : iStage(0)
+	CSceneManager() : iStage(1)
 	{
 	};
 
@@ -35,8 +36,10 @@ public:
 	CBaseScene* GetScenePointer();
 
 	// GameScene 객체에서 플레이어의 승리 플래그를 확인하고 true가 되면 stage의 값을 증가
-	void PlayerWin();
+	void StageClear();
 
 	// stage값을 반환
 	int GetStage();
+
+	void Reset();
 };

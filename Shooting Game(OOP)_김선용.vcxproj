@@ -141,29 +141,40 @@
   <ItemGroup>
     <ClInclude Include="CBaseObject.h" />
     <ClInclude Include="CBulletObject.h" />
+    <ClInclude Include="CEndingScene.h" />
     <ClInclude Include="CEnemyObject.h" />
     <ClInclude Include="CGameScene.h" />
+    <ClInclude Include="CInterfaceObject.h" />
     <ClInclude Include="CList(STL).h" />
     <ClInclude Include="CLoadingScene.h" />
     <ClInclude Include="Console.h" />
     <ClInclude Include="CPlayerObejct.h" />
     <ClInclude Include="CBaseScene.h" />
+    <ClInclude Include="CPotionObject.h" />
     <ClInclude Include="CSceneManager.h" />
+    <ClInclude Include="CStageClearScene.h" />
     <ClInclude Include="CTitleScene.h" />
+    <ClInclude Include="CWinScene.h" />
     <ClInclude Include="My_New.h" />
+    <ClInclude Include="newh.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CBaseObject.cpp" />
     <ClCompile Include="CBulletObject.cpp" />
+    <ClCompile Include="CEndingScene.cpp" />
     <ClCompile Include="CEnemyObject.cpp" />
     <ClCompile Include="CGameScene.cpp" />
+    <ClCompile Include="CInterfaceObject.cpp" />
     <ClCompile Include="CLoadingScene.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="CPlayerObejct.cpp" />
+    <ClCompile Include="CPotionObject.cpp" />
     <ClCompile Include="CSceneBase.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
+    <ClCompile Include="CStageClearScene.cpp" />
     <ClCompile Include="CTitleScene.cpp" />
+    <ClCompile Include="CWinScene.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

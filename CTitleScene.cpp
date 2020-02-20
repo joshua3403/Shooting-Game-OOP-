@@ -3,6 +3,8 @@
 
 CTitleScene::CTitleScene() : intro_print(false), bEnterEntered(false)
 {
+	cs_ClearScreen();
+
 	QueryPerformanceFrequency(&fFreq);
 	QueryPerformanceCounter(&start);
 }

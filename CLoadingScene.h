@@ -93,10 +93,12 @@ private:
 
 	LARGE_INTEGER fFreq;
 	LARGE_INTEGER start;
+	int Stage;
+	char StageInfo[dfSCREEN_WIDTH];
 	bool bLoadingSceneEnd;
 public:
 
-	CLoadingScene();
+	CLoadingScene(int stage);
 
 	~CLoadingScene();
 
@@ -109,7 +111,11 @@ public:
 
 	void PrintThree();
 
+	// 로딩이 끝났음을 알리는 flag를 반환하는 함수
 	bool GetLoadingSceneEnd();
 
 	void Sprite_Draw();
+
+	void PrintStageInfo();
+
 };

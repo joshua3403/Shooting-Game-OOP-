@@ -5,7 +5,9 @@ enum eObjectType
 {
 	PLAYER = 0,
 	ENEMY,
-	BULLET
+	BULLET,
+	POTION,
+	INTERFACEDISPLAY,
 };
 
 // 객체의 위치를 나타내는 구초체

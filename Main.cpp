@@ -3,7 +3,10 @@
 #include "CTitleScene.h"
 #include "CLoadingScene.h"
 #include "CGameScene.h"
-//#include "My_New.h"
+#include "CEndingScene.h"
+#include "CStageClearScene.h"
+#include "CWinScene.h"
+#include "newh.h"
 
 enum class eState
 {
@@ -13,11 +16,12 @@ enum class eState
 	LOADING,
 	CREATEPLAY,
 	PLAYING,
-	PAUSE,
 	CREATEDIE,
 	DIE,
+	CREATESTAGECLEAR,
+	STAGECLEAR,
+	CREATEWIN,
 	WIN,
-	ENDING
 } State;
 
 
@@ -42,7 +46,7 @@ int main()
 			break;
 
 		case eState::CREATELOADING:
-			pSceneManager->ChangeScene(new CLoadingScene);
+			pSceneManager->ChangeScene(new CLoadingScene(pSceneManager->GetStage()));
 			State = eState::LOADING;
 			break;
 
@@ -60,15 +64,53 @@ int main()
 			pSceneManager->Run();
 			if (dynamic_cast<CGameScene*>(pSceneManager->GetScenePointer())->GetPlayerWin())
 			{
-				pSceneManager->PlayerWin();
-				State = eState::CREATELOADING;
+				pSceneManager->StageClear();
+				if (pSceneManager->GetStage() > MAX_STAGE)
+					State = eState::CREATEWIN;
+				else
+					State = eState::CREATESTAGECLEAR;
 			}
 
 			if (dynamic_cast<CGameScene*>(pSceneManager->GetScenePointer())->GetEnemyWin())
 			{
 				State = eState::CREATEDIE;
 			}
+			break;
 
+		case eState::CREATEDIE:
+			pSceneManager->ChangeScene(new CEndingScene());
+			State = eState::DIE;
+			break;
+
+		case eState::DIE:
+			pSceneManager->Run();
+			if (dynamic_cast<CEndingScene*>(pSceneManager->GetScenePointer())->GetEndingSceneEnd())
+				State = eState::CREATETITLE;
+			break;
+
+		case eState::CREATESTAGECLEAR:
+			pSceneManager->ChangeScene(new CStageClearScene);
+			State = eState::STAGECLEAR;
+			break;
+
+		case eState::STAGECLEAR:
+			pSceneManager->Run();
+			if (dynamic_cast<CStageClearScene*>(pSceneManager->GetScenePointer())->GetStageClearEnd())
+				State = eState::CREATELOADING;
+			break;
+
+		case eState::CREATEWIN:
+			pSceneManager->ChangeScene(new CWinScene);
+			State = eState::WIN;
+			break;
+
+		case eState::WIN:
+			pSceneManager->Run();
+			if (dynamic_cast<CWinScene*>(pSceneManager->GetScenePointer())->GetWindSceneEnd())
+			{
+				pSceneManager->Reset();
+				State = eState::CREATETITLE;
+			}
 			break;
 		default:
 			break;
