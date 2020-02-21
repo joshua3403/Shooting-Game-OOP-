@@ -45,9 +45,6 @@
     <ClInclude Include="CPlayerObejct.h">
       <Filter>헤더 파일\Object</Filter>
     </ClInclude>
-    <ClInclude Include="My_New.h">
-      <Filter>헤더 파일\DataStructure &amp; Override</Filter>
-    </ClInclude>
     <ClInclude Include="CList(STL).h">
       <Filter>헤더 파일\DataStructure &amp; Override</Filter>
     </ClInclude>
@@ -93,7 +90,7 @@
     <ClInclude Include="CPotionObject.h">
       <Filter>헤더 파일\Object</Filter>
     </ClInclude>
-    <ClInclude Include="newh.h">
+    <ClInclude Include="New(Overriding).h">
       <Filter>헤더 파일\DataStructure &amp; Override</Filter>
     </ClInclude>
   </ItemGroup>

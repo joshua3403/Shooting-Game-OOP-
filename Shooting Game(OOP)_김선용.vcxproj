@@ -157,8 +157,7 @@
     <ClInclude Include="CStageClearScene.h" />
     <ClInclude Include="CTitleScene.h" />
     <ClInclude Include="CWinScene.h" />
-    <ClInclude Include="My_New.h" />
-    <ClInclude Include="newh.h" />
+    <ClInclude Include="New(Overriding).h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
