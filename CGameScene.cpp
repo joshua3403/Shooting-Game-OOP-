@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 #include "CGameScene.h"
 #include "CPlayerObejct.h"
@@ -5,6 +6,7 @@
 #include "CBulletObject.h"
 #include "CInterfaceObject.h"
 #include "CPotionObject.h"
+
 
 
 CGameScene::CGameScene(int stage) : iStageIndex(stage), iEnemyCount(0)
