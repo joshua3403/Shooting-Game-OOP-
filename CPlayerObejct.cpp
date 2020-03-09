@@ -64,4 +64,5 @@ void CPlayerObject::Render()
 
 CPlayerObject::~CPlayerObject()
 {
+	l_Player_Input.clear();
 }

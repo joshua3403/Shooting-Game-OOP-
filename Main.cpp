@@ -6,7 +6,7 @@
 #include "CEndingScene.h"
 #include "CStageClearScene.h"
 #include "CWinScene.h"
-#include "New(Overriding).h"
+//#include "New(Overriding).h"
 
 enum class eState
 {
