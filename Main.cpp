@@ -6,27 +6,14 @@
 #include "CEndingScene.h"
 #include "CStageClearScene.h"
 #include "CWinScene.h"
-//#include "New(Overriding).h"
+//#include "My_new.h"
 
-enum class eState
-{
-	CREATETITLE = 0,
-	TITLE,
-	CREATELOADING,
-	LOADING,
-	CREATEPLAY,
-	PLAYING,
-	CREATEDIE,
-	DIE,
-	CREATESTAGECLEAR,
-	STAGECLEAR,
-	CREATEWIN,
-	WIN,
-} State;
 
 
 int main()
 {
+	timeBeginPeriod(1);
+	srand(time(NULL));
 	cs_Initial();
 	State = eState::CREATETITLE;
 	CSceneManager* pSceneManager = CSceneManager::GetInstance();

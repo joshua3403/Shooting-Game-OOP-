@@ -42,7 +42,6 @@ public:
 
 	int GetShootTime();
 
-	// 적 객체에서 시간마다 총알을 생성하는 함수 <- 이 함수가 CEnemyClass에 들어가는게 맞다고 생각하지만 이럴 수 밖에 없었음
 	EnemyType GetEnemyType();
 
 	LARGE_INTEGER GetLARGEINTEGER();

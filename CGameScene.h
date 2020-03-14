@@ -28,6 +28,12 @@ public:
 
 	~CGameScene()
 	{
+		CList<CBaseObject*>::iterator it = ObjectList.begin();
+		while (it != ObjectList.end())
+		{
+			delete (*it);
+			it++;
+		}
 		ObjectList.clear();
 	}
 

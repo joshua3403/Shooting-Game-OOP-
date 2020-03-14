@@ -11,6 +11,7 @@
 
 CGameScene::CGameScene(int stage) : iStageIndex(stage), iEnemyCount(0)
 {
+
 	cs_ClearScreen();
 	// 게임씬 객체가 생성 될 때 플레이어 오브젝트 생성.
 	ObjectList.push_back(new CPlayerObject(this));
@@ -245,6 +246,7 @@ void CGameScene::DeleteBullet()
 		{
 			if ((*itor)->GetObjectPosition().iY == 0 || (*itor)->GetObjectPosition().iY == dfSCREEN_HEIGHT - 1)
 			{
+				delete (*itor);
 				itor = ObjectList.erase(itor);
 			}
 			else
@@ -287,15 +289,16 @@ void CGameScene::BulletCollision()
 								// 적은 데미지를 받고
 								(*Enemy)->GetDamageFromObject((*ObjectIter)->GetDamage());
 								// 총알은 파괴되고(ObjectIter가 erase내부에서 다음으로 이동됨)
+								delete (*ObjectIter);
 								ObjectIter = ObjectList.erase(ObjectIter);
 								// 적의 체력이 0이면
 								if ((*Enemy)->GetHp() == 0)
 								{
-									srand((unsigned int)time(NULL));
 									int chance = rand() % 10;
 									if (chance <= 2)
 										ObjectList.push_back(new CPotionObject(this, (*Enemy)->GetObjectPosition().iX, (*Enemy)->GetObjectPosition().iY));
 									iEnemyCount--;
+									delete (*Enemy);
 									Enemy = ObjectList.erase(Enemy);
 								}
 							}
@@ -322,6 +325,7 @@ void CGameScene::BulletCollision()
 							{
 								(*Player)->GetDamageFromObject((*ObjectIter)->GetDamage());
 								// 총알은 파괴되고(ObjectIter가 erase내부에서 다음으로 이동됨)
+								delete (*ObjectIter);
 								ObjectIter = ObjectList.erase(ObjectIter);
 								// 플레이어의 체력이 0이면
 								if ((*Player)->GetHp() == 0)
@@ -431,7 +435,10 @@ void CGameScene::DeletePotion()
 		if ((*itor)->GetObjectType() == eObjectType::POTION)
 		{
 			if ((*itor)->GetObjectPosition().iY == dfSCREEN_HEIGHT - 1)
+			{
+				delete (*itor);
 				itor = ObjectList.erase(itor);
+			}
 			else
 			{
 				itor++;
@@ -468,6 +475,7 @@ void CGameScene::PotionCollision()
 					if ((*potion)->GetObjectPosition().iX == (*player)->GetObjectPosition().iX && (*potion)->GetObjectPosition().iY == (*player)->GetObjectPosition().iY)
 					{
 						(*player)->GetDamageFromObject((*potion)->GetDamage() * (-1));
+						delete (*potion);
 						potion = ObjectList.erase(potion);
 					}
 					else

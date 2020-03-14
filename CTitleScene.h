@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "CBaseScene.h"
+#include "CSceneManager.h"
 
 class CTitleScene : public CBaseScene
 {
@@ -21,13 +22,14 @@ private:
 "",
 "                               Press Enter Key To Start...                       \0"
 };
-	bool intro_print;
+	bool _introPrint;
 	LARGE_INTEGER fFreq;
 	LARGE_INTEGER start;
 	bool bEnterEntered;
+	CSceneManager* pSceneManager;
 public:
 
-	CTitleScene();
+	CTitleScene(CSceneManager* pSceneManager);
 
 	~CTitleScene();
 

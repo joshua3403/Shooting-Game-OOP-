@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "CInterfaceObject.h"
 
+CInterfaceObject::~CInterfaceObject()
+{
+}
+
 bool CInterfaceObject::Action()
 {
 

@@ -17,6 +17,8 @@ public:
 		iDamage = damage;
 	};
 
+	~CInterfaceObject();
+
 	bool Action();
 
 	void Render();

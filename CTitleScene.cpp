@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "CTitleScene.h"
 
-CTitleScene::CTitleScene() : intro_print(false), bEnterEntered(false)
+CTitleScene::CTitleScene(CSceneManager* SceneManager) : _introPrint(false), bEnterEntered(false)
 {
 	cs_ClearScreen();
+	this->pSceneManager = SceneManager;
 
 	QueryPerformanceFrequency(&fFreq);
 	QueryPerformanceCounter(&start);
@@ -17,12 +18,16 @@ void CTitleScene::Update()
 {
 	Buffer_Clear();
 
-	if (!intro_print)
+	if (!_introPrint)
 		PrintIntro();
 	else
 	{
 		Sprite_Draw();
 		bEnterEntered = GetKeyInput();
+	}
+
+	if (bEnterEntered)
+	{
 	}
 
 }
@@ -42,7 +47,7 @@ void CTitleScene::PrintIntro()
 	if (time >= dfSCREEN_HEIGHT - 13)
 	{
 		time = dfSCREEN_HEIGHT;
-		intro_print = true;
+		_introPrint = true;
 	}
 }
 

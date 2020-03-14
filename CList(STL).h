@@ -132,7 +132,6 @@ public:
 
 		if (_size > 0)
 		{
-
 			Node* pPos = it._node;
 			if (pPos->_Prev)
 				pPos->_Prev->_Next = pPos->_Next;
