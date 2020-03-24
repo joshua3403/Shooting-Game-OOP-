@@ -1,27 +1,29 @@
 #include "stdafx.h"
 #include "CEndingScene.h"
 
-CEndingScene::CEndingScene() : bEndingSceneEnd(false)
+CEndingScene::CEndingScene(CSceneManager* SceneManager) : bEndingSceneEnd(false)
 {
+	pSceneManager = SceneManager;
 	cs_ClearScreen();
 
-	QueryPerformanceFrequency(&fFreq);
-	QueryPerformanceCounter(&start);
+	_Start = GetTickCount64();
 }
 
 void CEndingScene::Update()
 {
-	LARGE_INTEGER temp;
-	QueryPerformanceCounter(&temp);
+	_End = GetTickCount64();
 
-	__int64 now = (temp.QuadPart - start.QuadPart) / fFreq.QuadPart;
+	__int64 now = (_End - _Start) / 1000;
 
 	Buffer_Clear();
 
 	Sprite_Draw();
 
 	if (now > 2)
+	{
 		bEndingSceneEnd = true;
+		pSceneManager->ChangeScene(eState::CREATETITLE);
+	}
 }
 
 void CEndingScene::Sprite_Draw()
@@ -31,9 +33,4 @@ void CEndingScene::Sprite_Draw()
 		cs_MoveCursor(0, i);
 		printf(Lose[i - 8]);
 	}
-}
-
-bool CEndingScene::GetEndingSceneEnd()
-{
-	return this->bEndingSceneEnd;
 }

@@ -2,39 +2,37 @@
 #include "stdafx.h"
 #include "CGameScene.h"
 #include "CPlayerObejct.h"
-#include "CEnemyObject.h"
 #include "CBulletObject.h"
+#include "CEnemyObject.h"
 #include "CInterfaceObject.h"
 #include "CPotionObject.h"
 
 
 
-CGameScene::CGameScene(int stage) : iStageIndex(stage), iEnemyCount(0)
+CGameScene::CGameScene(CSceneManager* SceneManager ,int stage) : _iStageIndex(stage), _iEnemyCount(0)
 {
 
 	cs_ClearScreen();
 	// 게임씬 객체가 생성 될 때 플레이어 오브젝트 생성.
 	ObjectList.push_back(new CPlayerObject(this));
 	// 객체가 생성 될 때 처음 1 스테이지에 관련된 적들을 생성
-	CreateEnemy(iStageIndex);
+	CreateEnemy(_iStageIndex);
 	// 인터페이스 오브젝트 생성
 	CreateInterface();
-	bPlayerWin = false;
-	bEnemyWin = false;
-	QueryPerformanceFrequency(&fFreq);
-	QueryPerformanceCounter(&startShoot1);
-	QueryPerformanceCounter(&startShoot2);
-	QueryPerformanceCounter(&startShootBOSS);
+	pSceneManager = SceneManager;
+	_bPlayerWin = false;
+	_bEnemyWin = false;
+
 }
 
 void CGameScene::Update()
 {
-	// 일시정지(Enter)키가 눌리지 않았으면
 	Buffer_Clear();
 
 	GetKeyInput();
 
-	if (this->bEnter)
+	// 일시정지(Enter)키가 눌리지 않았으면
+	if (_bEnter)
 	{
 		PrintPause();
 	}
@@ -44,27 +42,18 @@ void CGameScene::Update()
 
 		ObjectPlay();
 
-		EnemyCreateBullet();
-
-		BulletCollision();
-
-		DeleteBullet();
-
-		DeletePotion();
-
-		PotionCollision();
-
-		CheckPlayerWin();
-
 		Sprite_Draw();
 
+		ChangeScenePlayerLose();
+
+		printf("%d\n", (int)ObjectList.size());
 	}
 
 }
 
 void CGameScene::ObjectPlay()
 {
-	CList<CBaseObject*>::iterator itor = ObjectList.begin();
+	std::list<CBaseObject*>::iterator itor = ObjectList.begin();
 	while (true)
 	{
 		if (itor == ObjectList.end())
@@ -98,9 +87,9 @@ void CGameScene::GetKeyInput()
 	CPlayerObject* Player = nullptr;
 
 
-	for (CList<CBaseObject*>::iterator itor = ObjectList.begin(); itor != ObjectList.end(); ++itor)
+	for (std::list<CBaseObject*>::iterator itor = ObjectList.begin(); itor != ObjectList.end(); ++itor)
 	{
-		if ((*itor)->GetObjectType() == eObjectType::PLAYER)
+		if ((*itor)->GetObjectType() == e_ObjectType::PLAYER)
 		{
 			Player = dynamic_cast<CPlayerObject*>(*itor);
 			break;
@@ -108,7 +97,7 @@ void CGameScene::GetKeyInput()
 	}
 
 	// 함수의 이름과 내용이 일치하진 않지만 여기서 iPlayerHp의 값을 갱신한다.
-	iPlayerHp = Player->GetHp();
+	_iPlayerHp = Player->GetHp();
 
 	if (Player == nullptr)
 	{
@@ -156,11 +145,11 @@ void CGameScene::GetKeyInput()
 	if (bSpace)
 	{
 		Player->l_Player_Input.push_back(static_cast<int>(KeyInput::ATTACK));
-		ObjectList.push_back(new CBulletObject(this, CBulletObject::eWhoShoot::PLAYER, eObjectType::BULLET, Player->GetObjectPosition().iX, Player->GetObjectPosition().iY-1, 1, Player->GetDamage()));
+		ObjectList.push_back(new CBulletObject(this, CBulletObject::eWhoShoot::PLAYER, e_ObjectType::BULLET, Player->GetObjectPosition().iX, Player->GetObjectPosition().iY-1, 1, Player->GetDamage()));
 	}
 
 	if (bReturn)
-		this->bEnter = !(this->bEnter);
+		_bEnter = !_bEnter;
 
 }
 
@@ -223,8 +212,8 @@ void CGameScene::CreateEnemy(int iStageIndex)
 			break;
 		}
 
-		ObjectList.push_back(new CEnemyClass(this, eObjectType::ENEMY, PositionX, PositionY, Hp, Damage, Display, Type, Time));
-		iEnemyCount++;
+		ObjectList.push_back(new CEnemyClass(this, e_ObjectType::ENEMY, PositionX, PositionY, Hp, Damage, Display, Type, Time));
+		_iEnemyCount++;
 
 		if (buff == NULL)
 			continue;
@@ -234,173 +223,57 @@ void CGameScene::CreateEnemy(int iStageIndex)
 
 }
 
-void CGameScene::DeleteBullet()
+void CGameScene::GetEnemyDelete(void* enemy)
 {
-	CList<CBaseObject*>::iterator itor = ObjectList.begin();
-	while (true)
+	std::list<CBaseObject*>::iterator it = ObjectList.begin();
+	for (; it != ObjectList.end(); it++)
 	{
-		if (itor == ObjectList.end())
+		if ((*it) == (CEnemyClass*)enemy)
+		{
+			delete (*it);
+			ObjectList.erase(it);
 			break;
-
-		if ((*itor)->GetObjectType() == eObjectType::BULLET)
-		{
-			if ((*itor)->GetObjectPosition().iY == 0 || (*itor)->GetObjectPosition().iY == dfSCREEN_HEIGHT - 1)
-			{
-				delete (*itor);
-				itor = ObjectList.erase(itor);
-			}
-			else
-			{
-				itor++;
-			}
-
 		}
 		else
 		{
-			itor++;
+			continue;
 		}
 	}
 }
 
-void CGameScene::BulletCollision()
+void CGameScene::GetBulletDelete(void* bullet)
 {
-	CList<CBaseObject*>::iterator ObjectIter = ObjectList.begin();
-	while (ObjectIter != ObjectList.end())
+	std::list<CBaseObject*>::iterator it = ObjectList.begin();
+	for (; it != ObjectList.end(); it++)
 	{
-		// 오브젝트 리스트에서 총알을 찾고
-		if ((*ObjectIter)->GetObjectType() == eObjectType::BULLET)
+		if ((*it) == (CBulletObject*)bullet)
 		{
-			CList<CBaseObject*>::iterator Enemy = ObjectList.begin();
-			CList<CBaseObject*>::iterator Player = ObjectList.begin();
-			CList<CBaseObject*>::iterator Interface = ObjectList.begin();
-			// 누가 발사했느냐에 따라
-			switch (dynamic_cast<CBulletObject*>(*ObjectIter)->GetWhoShoot())
-			{
-				// 플레이어가 발사했다면
-				case CBulletObject::eWhoShoot::PLAYER:
-					while (Enemy != ObjectList.end())
-					{
-						// 적을 찾아
-						if ((*Enemy)->GetObjectType() == eObjectType::ENEMY)
-						{
-							// 총알과 적의 위치가 같다면
-							if ((*Enemy)->GetObjectPosition().iX == (*ObjectIter)->GetObjectPosition().iX && (*Enemy)->GetObjectPosition().iY == (*ObjectIter)->GetObjectPosition().iY)
-							{
-								// 적은 데미지를 받고
-								(*Enemy)->GetDamageFromObject((*ObjectIter)->GetDamage());
-								// 총알은 파괴되고(ObjectIter가 erase내부에서 다음으로 이동됨)
-								delete (*ObjectIter);
-								ObjectIter = ObjectList.erase(ObjectIter);
-								// 적의 체력이 0이면
-								if ((*Enemy)->GetHp() == 0)
-								{
-									int chance = rand() % 10;
-									if (chance <= 2)
-										ObjectList.push_back(new CPotionObject(this, (*Enemy)->GetObjectPosition().iX, (*Enemy)->GetObjectPosition().iY));
-									iEnemyCount--;
-									delete (*Enemy);
-									Enemy = ObjectList.erase(Enemy);
-								}
-							}
-							else
-							{
-								Enemy++;
-							}
-						}
-						else
-						{
-							Enemy++;
-						}
-					}
-					ObjectIter++;
-					break;
-
-				case CBulletObject::eWhoShoot::ENEMY:
-					while (Player != ObjectList.end())
-					{
-						// 플레이어를 찾아
-						if ((*Player)->GetObjectType() == eObjectType::PLAYER)
-						{
-							if ((*Player)->GetObjectPosition().iX == (*ObjectIter)->GetObjectPosition().iX && (*Player)->GetObjectPosition().iY == (*ObjectIter)->GetObjectPosition().iY)
-							{
-								(*Player)->GetDamageFromObject((*ObjectIter)->GetDamage());
-								// 총알은 파괴되고(ObjectIter가 erase내부에서 다음으로 이동됨)
-								delete (*ObjectIter);
-								ObjectIter = ObjectList.erase(ObjectIter);
-								// 플레이어의 체력이 0이면
-								if ((*Player)->GetHp() == 0)
-								{
-									bEnemyWin = true;
-								}
-							}
-							else
-							{
-								Player++;
-							}
-						}
-						else
-						{
-							Player++;
-						}
-					}
-					ObjectIter++;
-					break;					
-				default:
-					break;
-			}
+			delete (*it);
+			ObjectList.erase(it);
+			break;
 		}
 		else
 		{
-			ObjectIter++;
+			continue;
 		}
 	}
 }
 
-void CGameScene::EnemyCreateBullet()
+void CGameScene::GetPlayerLose()
 {
-	LARGE_INTEGER now;
-	QueryPerformanceCounter(&now);
-
-	for (CList<CBaseObject*>::iterator Enemy = ObjectList.begin(); Enemy != ObjectList.end();++Enemy)
-	{
-		if ((*Enemy)->GetObjectType() == eObjectType::ENEMY)
-		{
-			// 적의 슈팅 시점과 지금 시점을 비교
-			__int64 time = (now.QuadPart - dynamic_cast<CEnemyClass*>(*Enemy)->GetLARGEINTEGER().QuadPart) / fFreq.QuadPart;
-
-			// 구한 시간이 적 객체 내부에 존재하는 발사 시간과 일치하면
-			if (time >= dynamic_cast<CEnemyClass*>(*Enemy)->GetShootTime())
-			{
-				// 총알 생성
-				ObjectList.push_back(new CBulletObject(this, CBulletObject::eWhoShoot::ENEMY, eObjectType::BULLET, (*Enemy)->GetObjectPosition().iX, (*Enemy)->GetObjectPosition().iY + 1, 1, (*Enemy)->GetDamage()));
-
-				// 적 객체 내의 발사 시간을 초기화
-				dynamic_cast<CEnemyClass*>(*Enemy)->SetLARGEINTEGER(now);
-			}
-
-		}
-
-	}
-
+	_bEnemyWin = true;
 }
 
-void CGameScene::CheckPlayerWin()
+void CGameScene::ChangeScenePlayerLose()
 {
-	if (this->iEnemyCount == 0)
+	if (_bEnemyWin)
 	{
-		bPlayerWin = true;
+		pSceneManager->ChangeScene(eState::CREATEDIE);
 	}
 }
 
-bool CGameScene::GetPlayerWin()
-{
-	return this->bPlayerWin;
-}
 
-bool CGameScene::GetEnemyWin()
-{
-	return this->bEnemyWin;
-}
+
 
 void CGameScene::PrintPause()
 {
@@ -410,13 +283,13 @@ void CGameScene::PrintPause()
 
 void CGameScene::CreateInterface()
 {
-	CList<CBaseObject*>::iterator itor = ObjectList.begin();
+	std::list<CBaseObject*>::iterator itor = ObjectList.begin();
 	while (true)
 	{
 		if (itor == ObjectList.end())
 			break;
 
-		if ((*itor)->GetObjectType() == eObjectType::PLAYER)
+		if ((*itor)->GetObjectType() == e_ObjectType::PLAYER)
 		{
 			ObjectList.push_back(new CInterfaceObject(this, (*itor)->GetHp(), (*itor)->GetDamage()));
 			break;
@@ -424,89 +297,17 @@ void CGameScene::CreateInterface()
 	}
 }
 
-void CGameScene::DeletePotion()
-{
-	CList<CBaseObject*>::iterator itor = ObjectList.begin();
-	while (true)
-	{
-		if (itor == ObjectList.end())
-			break;
-
-		if ((*itor)->GetObjectType() == eObjectType::POTION)
-		{
-			if ((*itor)->GetObjectPosition().iY == dfSCREEN_HEIGHT - 1)
-			{
-				delete (*itor);
-				itor = ObjectList.erase(itor);
-			}
-			else
-			{
-				itor++;
-			}
-		}
-		else
-		{
-			itor++;
-		}
-	}
-}
-
-void CGameScene::PotionCollision()
-{
-	CList<CBaseObject*>::iterator potion = ObjectList.begin();
-	CList<CBaseObject*>::iterator player = ObjectList.begin();
-	while (true)
-	{
-		if (potion == ObjectList.end())
-			break;
-
-		if ((*potion)->GetObjectType() == eObjectType::POTION)
-		{
-			while (true)
-			{
-				if (player == ObjectList.end())
-				{
-					potion++;
-					break;
-				}
-
-				if ((*player)->GetObjectType() == eObjectType::PLAYER)
-				{
-					if ((*potion)->GetObjectPosition().iX == (*player)->GetObjectPosition().iX && (*potion)->GetObjectPosition().iY == (*player)->GetObjectPosition().iY)
-					{
-						(*player)->GetDamageFromObject((*potion)->GetDamage() * (-1));
-						delete (*potion);
-						potion = ObjectList.erase(potion);
-					}
-					else
-					{
-						player++;
-					}
-				}
-				else
-				{
-					player++;
-				}
-			}
-		}
-		else
-		{
-			potion++;
-		}
-	}
-}
-
 void CGameScene::UpdateInterface()
 {
-	CList<CBaseObject*>::iterator Interface = ObjectList.begin();
+	std::list<CBaseObject*>::iterator Interface = ObjectList.begin();
 	while (true)
 	{
 		if (Interface == ObjectList.end())
 			break;
 
-		if ((*Interface)->GetObjectType() == eObjectType::INTERFACEDISPLAY)
+		if ((*Interface)->GetObjectType() == e_ObjectType::INTERFACEDISPLAY)
 		{
-			dynamic_cast<CInterfaceObject*>(*Interface)->UpdateHp(iPlayerHp);
+			dynamic_cast<CInterfaceObject*>(*Interface)->UpdateHp(_iPlayerHp);
 			break;
 		}
 		else
@@ -515,3 +316,4 @@ void CGameScene::UpdateInterface()
 		}
 	}
 }
+

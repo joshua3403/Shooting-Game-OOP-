@@ -6,3 +6,5 @@
 #include <time.h>
 #include <string.h>
 #include <strsafe.h>
+#include <algorithm>
+#include <list>

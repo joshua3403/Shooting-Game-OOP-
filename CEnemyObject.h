@@ -7,7 +7,7 @@
 #define MAX_MOVE_RANGE1 2
 #define MAX_MOVE_RANGE2 4
 
-enum EnemyType
+enum class EnemyType
 {
 	NORMAL1 = 0,
 	NORMAL2,
@@ -17,21 +17,18 @@ enum EnemyType
 class CEnemyClass : public CBaseObject
 {
 private:
-	EnemyType etype;
-	CGameScene* pGameScene;
-	LARGE_INTEGER fFreq;
-	LARGE_INTEGER startMove;
-	LARGE_INTEGER startShoot;
-	int ShootBulletTime;
+	EnemyType _etype;
+	CGameScene* _pGameScene;
+	DWORD _startTime;
+	DWORD _startShootTime;
+	int _ShootBulletTime;
 
 public:
-	CEnemyClass(CGameScene* GameScene, eObjectType ObjectType, int X, int Y, int Hp, int Damage, char Display, EnemyType type, int time) :CBaseObject(ObjectType, X, Y, Hp, Damage, Display), etype(type), pGameScene(GameScene)
+	CEnemyClass(CGameScene* GameScene, e_ObjectType _ObjectType, int X, int Y, int Hp, int Damage, char Display, EnemyType type, int time) :CBaseObject(_ObjectType, X, Y, Hp, Damage, Display), _etype(type), _pGameScene(GameScene)
 	{
-		QueryPerformanceFrequency(&fFreq);
-		QueryPerformanceCounter(&startMove);
-		QueryPerformanceCounter(&startShoot);
-
-		ShootBulletTime = time;
+		_startTime = GetTickCount64();
+		_startShootTime = GetTickCount64();
+		_ShootBulletTime = time;
 	}
 
 	bool Action();
@@ -42,9 +39,11 @@ public:
 
 	int GetShootTime();
 
+	// 죽었는지 체크
+	void CheckDie();
+
 	EnemyType GetEnemyType();
 
-	LARGE_INTEGER GetLARGEINTEGER();
 
-	void SetLARGEINTEGER(LARGE_INTEGER time);
+
 };

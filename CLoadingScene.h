@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "CBaseScene.h"
+#include "CSceneManager.h"
 
 class CLoadingScene : public CBaseScene
 {
@@ -93,12 +94,12 @@ private:
 
 	LARGE_INTEGER fFreq;
 	LARGE_INTEGER start;
-	int Stage;
+	int _Stage;
 	char StageInfo[dfSCREEN_WIDTH];
-	bool bLoadingSceneEnd;
+	CSceneManager* _pSceneManager;
 public:
 
-	CLoadingScene(int stage);
+	CLoadingScene(int stage, CSceneManager* SceneManager);
 
 	~CLoadingScene();
 
@@ -111,8 +112,6 @@ public:
 
 	void PrintThree();
 
-	// 로딩이 끝났음을 알리는 flag를 반환하는 함수
-	bool GetLoadingSceneEnd();
 
 	void Sprite_Draw();
 

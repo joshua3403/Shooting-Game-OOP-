@@ -17,17 +17,17 @@ private:
 	CGameScene* pGameScene;
 
 public:
-	CBulletObject(CGameScene* GameScene,eWhoShoot who, eObjectType ObjectType, int X, int Y, int Hp, int Damage) : CBaseObject(ObjectType, X, Y, Hp, Damage, '0')
+	CBulletObject(CGameScene* GameScene,eWhoShoot who, e_ObjectType _ObjectType, int X, int Y, int Hp, int Damage) : CBaseObject(_ObjectType, X, Y, Hp, Damage, '0')
 	{
 		eWho = who;
 		pGameScene = GameScene;
 		switch (who)
 		{
 		case eWhoShoot::PLAYER:
-			this->cDisplay = '^';
+			this->_cDisplay = '^';
 			break;
 		case eWhoShoot::ENEMY:
-			this->cDisplay = '#';
+			this->_cDisplay = '#';
 			break;
 		}
 	}
@@ -37,6 +37,8 @@ public:
 	bool Action();
 
 	void Render();
+
+	void CheckCollision();
 
 	eWhoShoot GetWhoShoot();
 };

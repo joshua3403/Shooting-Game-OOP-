@@ -10,7 +10,7 @@ bool CPotionObject::Action()
 
 void CPotionObject::Render()
 {
-	this->pGameScene->ScreenBuffer[this->s_RelativePosition.iY][this->s_RelativePosition.iX] = this->cDisplay;
+	this->pGameScene->ScreenBuffer[this->s_RelativePosition.iY][this->s_RelativePosition.iX] = this->_cDisplay;
 }
 
 

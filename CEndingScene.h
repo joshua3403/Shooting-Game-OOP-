@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "CBaseScene.h"
+#include "CSceneManager.h"
 
 class CEndingScene : public CBaseScene
 {
@@ -15,16 +16,14 @@ private:
 "                                       Try Again :-(                              \0"
 	};
 	bool bEndingSceneEnd;
-	LARGE_INTEGER fFreq;
-	LARGE_INTEGER start;
+	DWORD _Start;
+	DWORD _End;
+	CSceneManager* pSceneManager;
 
 public:
-	CEndingScene();
+	CEndingScene(CSceneManager* SceneManager);
 
 	void Update();
 
 	void Sprite_Draw();
-
-	bool GetEndingSceneEnd();
-
 };

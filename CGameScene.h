@@ -3,35 +3,33 @@
 #include "stdafx.h"
 #include "CBaseScene.h"
 #include "CBaseObject.h"
-#include "CList(STL).h"
+#include "CSceneManager.h"
 
 class CGameScene : public CBaseScene
 {
 
 private:
-	CList<CBaseObject*> ObjectList;
-	int iStageIndex;
-	int iEnemyCount;
-	bool bPlayerWin;
-	bool bEnemyWin;
-	bool bEnter;
+	CSceneManager* pSceneManager;
+	int _iStageIndex;
+	int _iEnemyCount;
+	bool _bPlayerWin;
+	bool _bEnemyWin;
+	bool _bEnter;
 	LARGE_INTEGER fFreq;
-	LARGE_INTEGER startShoot1;
-	LARGE_INTEGER startShoot2;
-	LARGE_INTEGER startShootBOSS;
 	const char* Pause = "                                         PAUSE                                    \0";
-	int iPlayerHp;
+	int _iPlayerHp;
 public:
 
-	CGameScene(int stage);
+	CGameScene(CSceneManager* SceneManager,int stage);
 
 
 	~CGameScene()
 	{
-		CList<CBaseObject*>::iterator it = ObjectList.begin();
+		std::list<CBaseObject*>::iterator it = ObjectList.begin();
 		while (it != ObjectList.end())
 		{
-			delete (*it);
+			if((*it)!= nullptr)
+				delete (*it);
 			it++;
 		}
 		ObjectList.clear();
@@ -52,36 +50,29 @@ public:
 	// 스테이지의 정보를 받아 해당 적들을 생성하는 함수
 	void CreateEnemy(int iStageIndex);
 
-	// 화면의 범위를 벗어난 총알을 삭제하는 함수
-	void DeleteBullet();
+	// 적 오브젝트로부터 소멸을 전달받는 함수
+	void GetEnemyDelete(void* enemy);
 
-	// 움직이는 총알과 오브젝트의 충돌을 처리하는 함수
-	void BulletCollision();
+	// 총알의 소멸을 전달받는 함수
+	void GetBulletDelete(void* bullet);
 
-	// 적이 불렛을 생성하는 함수
-	void EnemyCreateBullet();
+	// 플레이어 오브젝트로부터 플레이어의 사망을 전달맏음
+	void GetPlayerLose();
 
-	// 플레이어가 스테이지를 깼는지 확인하는 함수
-	void CheckPlayerWin();
+	// 씬 매니저에게 플레이어 패배 씬으로의 전환을 전달
+	void ChangeScenePlayerLose();
 
-	// 플레이어 승리의 플래그를 반환
-	bool GetPlayerWin();
-
-	// 적의 승리 플래그를 반환
-	bool GetEnemyWin();
-	
 	// 일시 정지 화면 출력
 	void PrintPause();
 
 	// 인터페이스 오브젝트 생성
 	void CreateInterface();
 
-	// 포션 삭제
-	void DeletePotion();
-
-	// 포션 충돌처리
-	void PotionCollision();
-
 	// 인터페이스 오브젝트에게 플레이어 체력을 갱신시킴
 	void UpdateInterface();
+
+
+public:
+	std::list<CBaseObject*> ObjectList;
+
 };

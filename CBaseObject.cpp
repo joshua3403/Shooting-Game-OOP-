@@ -5,30 +5,36 @@ CBaseObject::~CBaseObject()
 {
 }
 
-eObjectType CBaseObject::GetObjectType()
+e_ObjectType CBaseObject::GetObjectType()
 {
-	return this->ObjectType;
+	return this->_ObjectType;
 }
+
 
 sObjectPosition CBaseObject::GetObjectPosition()
 {
 	return this->s_RelativePosition;
 }
 
+void CBaseObject::TakeDamage(int damage)
+{
+	_iHp -= damage;
+}
+
 int CBaseObject::GetDamage()
 {
-	return this->iDamage;
+	return this->_iDamage;
 }
 
 void CBaseObject::GetDamageFromObject(int damage)
 {
-	iHp -= damage;
+	_iHp -= damage;
 
-	if (iHp <= 0)
-		iHp = 0;
+	if (_iHp <= 0)
+		_iHp = 0;
 }
 
 int CBaseObject::GetHp()
 {
-	return this->iHp;
+	return this->_iHp;
 }

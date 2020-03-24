@@ -46,21 +46,33 @@ bool CPlayerObject::Action()
 		itor = l_Player_Input.erase(itor);
 	}
 
+	if (_iHp > MAX_HP)
+		_iHp = MAX_HP;
 
-	if (this->iHp > MAX_HP)
-		iHp = MAX_HP;
+	CheckDelete();
 	return true;
 }
 
 void CPlayerObject::Render()
 {
-	if(this->bIsAlive)
-		pGameScene->ScreenBuffer[this->s_RelativePosition.iY][this->s_RelativePosition.iX] = this->cDisplay;
+	if(this->_bIsAlive)
+		pGameScene->ScreenBuffer[this->s_RelativePosition.iY][this->s_RelativePosition.iX] = this->_cDisplay;
 	else
 	{
 		pGameScene->ScreenBuffer[this->s_RelativePosition.iY][this->s_RelativePosition.iX] = ' ';
 	}
 }
+
+void CPlayerObject::CheckDelete()
+{
+	if (_iHp == 0) 
+	{
+		pGameScene->GetPlayerLose();
+	}
+}
+
+
+
 
 CPlayerObject::~CPlayerObject()
 {

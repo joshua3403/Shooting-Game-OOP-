@@ -23,7 +23,7 @@ class CPlayerObject : public CBaseObject
 private:
 	CGameScene* pGameScene;
 public:
-	CPlayerObject(CGameScene* GameScene) : CBaseObject(eObjectType::PLAYER, 40, 22,5, 1, 'A')
+	CPlayerObject(CGameScene* GameScene) : CBaseObject(e_ObjectType::PLAYER, 40, 22,5, 1, 'A')
 	{
 		this->pGameScene = GameScene;
 	}
@@ -31,6 +31,9 @@ public:
 	bool Action();
 
 	void Render();
+
+	void CheckDelete();
+
 
 	~CPlayerObject();
 

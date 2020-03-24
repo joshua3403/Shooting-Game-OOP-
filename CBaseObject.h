@@ -1,7 +1,7 @@
 #pragma once
 
 // 객체의 속성을 구분할 열거체
-enum eObjectType
+enum class e_ObjectType
 {
 	PLAYER = 0,
 	ENEMY,
@@ -23,33 +23,33 @@ class CBaseObject
 
 protected:
 	// 오브젝트 속성
-	eObjectType ObjectType;
+	e_ObjectType _ObjectType;
 
 	// 오브젝트의 현재(상대)위치
 	sObjectPosition s_RelativePosition;
 
 	// 오브젝트의 사용 유무
-	bool bIsAlive;
+	bool _bIsAlive;
 
 	// 오브젝트의 체력
-	int iHp;
+	int _iHp;
 
 	// 오브젝트의 공격력
-	int iDamage;
+	int _iDamage;
 
 	// 오브젝트의 화면 출력 모습
-	char cDisplay;
+	char _cDisplay;
 
 public:
-	CBaseObject(eObjectType ObjectType, int X, int Y, int Hp, int Damage, char Display)
+	CBaseObject(e_ObjectType _ObjectType, int X, int Y, int Hp, int Damage, char Display)
 	{
-		this->ObjectType = ObjectType;
+		this->_ObjectType = _ObjectType;
 		s_RelativePosition.iX = X;
 		s_RelativePosition.iY = Y;
-		bIsAlive = true;
-		iHp = Hp;
-		iDamage = Damage;
-		cDisplay = Display;
+		_bIsAlive = true;
+		_iHp = Hp;
+		_iDamage = Damage;
+		_cDisplay = Display;
 	}
 
 	virtual ~CBaseObject();
@@ -60,10 +60,13 @@ public:
 	virtual void Render() = 0;
 
 	// 오브젝트의 타입을 반환
-	eObjectType GetObjectType();
+	e_ObjectType GetObjectType();
 
 	// 오브젝트의 위치 구조체를 반환
 	sObjectPosition GetObjectPosition();
+
+	// 데미지를 입음
+	void TakeDamage(int damage);
 
 	// 오브젝트의 데미지를 반환
 	int GetDamage();

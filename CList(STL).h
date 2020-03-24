@@ -110,10 +110,10 @@ public:
 		Node* newNode = new Node(data);
 		Node* temp = itor;
 
-		newNode->_Next = temp;
-		newNode->_Prev = temp->_Prev;
-		temp->_Prev->_Next = newNode;
-		temp->_Prev = newNode;
+		temp->_Next = newNode;
+		newNode->_Prev = temp;
+		newNode->_Next = nullptr;
+		tail = newNode;
 
 		_size++;
 	}

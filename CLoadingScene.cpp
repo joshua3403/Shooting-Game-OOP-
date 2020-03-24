@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "CLoadingScene.h"
 
-CLoadingScene::CLoadingScene(int stage) : bLoadingSceneEnd(false), Stage(stage)
+CLoadingScene::CLoadingScene(int stage, CSceneManager* SceneManager) : _Stage(stage), _pSceneManager(SceneManager)
 {
 	cs_ClearScreen();
 	QueryPerformanceFrequency(&fFreq);
 	QueryPerformanceCounter(&start);
 	PrintStageInfo();
-	Stage = 0;
+	_Stage = 0;
 }
 
 CLoadingScene::~CLoadingScene()
@@ -29,7 +29,7 @@ void CLoadingScene::Update()
 		PrintOne();
 	else
 	{
-		bLoadingSceneEnd = true;
+		_pSceneManager->ChangeScene(eState::CREATEPLAY);
 	}
 }
 
@@ -83,17 +83,12 @@ void CLoadingScene::PrintThree()
 	}
 }
 
-bool CLoadingScene::GetLoadingSceneEnd()
-{
-	return this->bLoadingSceneEnd;
-}
-
 void CLoadingScene::Sprite_Draw()
 {
 }
 
 void CLoadingScene::PrintStageInfo()
 {
-	sprintf(StageInfo, "                                      STAGE : %d                                  \0", this->Stage);
+	sprintf(StageInfo, "                                      STAGE : %d                                  \0", this->_Stage);
 }
 

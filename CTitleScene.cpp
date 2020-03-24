@@ -4,7 +4,7 @@
 CTitleScene::CTitleScene(CSceneManager* SceneManager) : _introPrint(false), bEnterEntered(false)
 {
 	cs_ClearScreen();
-	this->pSceneManager = SceneManager;
+	pSceneManager = SceneManager;
 
 	QueryPerformanceFrequency(&fFreq);
 	QueryPerformanceCounter(&start);
@@ -28,6 +28,7 @@ void CTitleScene::Update()
 
 	if (bEnterEntered)
 	{
+		pSceneManager->ChangeScene(eState::CREATELOADING);
 	}
 
 }
