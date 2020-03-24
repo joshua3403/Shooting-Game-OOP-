@@ -3,6 +3,7 @@
 #include "CTitleScene.h"
 #include "CLoadingScene.h"
 #include "CGameScene.h"
+#include "CWinScene.h"
 #include "CEndingScene.h"
 
 CSceneManager CSceneManager::SceneManager;
@@ -35,6 +36,10 @@ void CSceneManager::Run()
 		pScene = new CEndingScene(this);
 		_State = eState::DIE;
 		break;
+	case eState::CREATEWIN:
+		pScene = new CWinScene(this);
+		_State = eState::WIN;
+		break;
 	default:
 		pScene->Update();
 		break;
@@ -51,6 +56,12 @@ CBaseScene* CSceneManager::GetScenePointer()
 void CSceneManager::StageClear()
 {
 	_iStage++;
+
+	if(_iStage >=3)
+		ChangeScene(eState::CREATEWIN);
+	else
+		ChangeScene(eState::CREATEDIE);
+
 }
 
 int CSceneManager::GetStage()

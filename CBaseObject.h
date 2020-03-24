@@ -68,6 +68,8 @@ public:
 	// 데미지를 입음
 	void TakeDamage(int damage);
 
+	void TakeHp(int hp);
+
 	// 오브젝트의 데미지를 반환
 	int GetDamage();
 

@@ -6,8 +6,6 @@
 #include "CEndingScene.h"
 #include "CStageClearScene.h"
 #include "CWinScene.h"
-//#include "My_new.h"
-
 
 
 int main()

@@ -46,23 +46,23 @@ void CGameScene::Update()
 
 		ChangeScenePlayerLose();
 
-		printf("%d\n", (int)ObjectList.size());
+		CheckStageClear();
 	}
 
 }
 
 void CGameScene::ObjectPlay()
 {
-	std::list<CBaseObject*>::iterator itor = ObjectList.begin();
-	while (true)
-	{
-		if (itor == ObjectList.end())
-			break;
 
+	for (std::list<CBaseObject*>::iterator itor = ObjectList.begin(); itor != ObjectList.end(); ++itor)
+	{
 		(*itor)->Action();
-		(*itor)->Render();
-		itor++;
 	}
+
+	for (std::list<CBaseObject*>::iterator itor = ObjectList.begin(); itor != ObjectList.end(); ++itor)
+	{
+		(*itor)->Render();
+	}	
 }
 
 void CGameScene::Sprite_Draw()
@@ -231,13 +231,10 @@ void CGameScene::GetEnemyDelete(void* enemy)
 		if ((*it) == (CEnemyClass*)enemy)
 		{
 			delete (*it);
-			ObjectList.erase(it);
-			break;
+			_iEnemyCount--;
+			it = ObjectList.erase(it);
 		}
-		else
-		{
-			continue;
-		}
+
 	}
 }
 
@@ -249,13 +246,23 @@ void CGameScene::GetBulletDelete(void* bullet)
 		if ((*it) == (CBulletObject*)bullet)
 		{
 			delete (*it);
-			ObjectList.erase(it);
-			break;
+			it = ObjectList.erase(it);
 		}
-		else
+
+	}
+}
+
+void CGameScene::GetPotionDelete(void* potion)
+{
+	std::list<CBaseObject*>::iterator it = ObjectList.begin();
+	for (; it != ObjectList.end(); it++)
+	{
+		if ((*it) == (CPotionObject*)potion)
 		{
-			continue;
+			delete (*it);
+			it = ObjectList.erase(it);
 		}
+
 	}
 }
 
@@ -269,6 +276,14 @@ void CGameScene::ChangeScenePlayerLose()
 	if (_bEnemyWin)
 	{
 		pSceneManager->ChangeScene(eState::CREATEDIE);
+	}
+}
+
+void CGameScene::CheckStageClear()
+{
+	if (_iEnemyCount == 0)
+	{
+		pSceneManager->StageClear();
 	}
 }
 

@@ -56,11 +56,17 @@ public:
 	// 총알의 소멸을 전달받는 함수
 	void GetBulletDelete(void* bullet);
 
+	// 포션의 소멸을 전달받는 함수
+	void GetPotionDelete(void* potion);
+
 	// 플레이어 오브젝트로부터 플레이어의 사망을 전달맏음
 	void GetPlayerLose();
 
 	// 씬 매니저에게 플레이어 패배 씬으로의 전환을 전달
 	void ChangeScenePlayerLose();
+
+	// 씬 매니저에게 플레이어 스테이지 클리어를 전달
+	void CheckStageClear();
 
 	// 일시 정지 화면 출력
 	void PrintPause();

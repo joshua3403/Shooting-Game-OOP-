@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "CWinScene.h"
 
-CWinScene::CWinScene() : bWinSceneEnd(false)
+CWinScene::CWinScene(CSceneManager* SceneManager) : bWinSceneEnd(false)
 {
 	cs_ClearScreen();
+	_pSceneManager = SceneManager;
 
-	QueryPerformanceFrequency(&fFreq);
-	QueryPerformanceCounter(&start);
+	_startTime = GetTickCount64();
+
 }
 
 void CWinScene::Update()
@@ -14,14 +15,16 @@ void CWinScene::Update()
 	LARGE_INTEGER temp;
 	QueryPerformanceCounter(&temp);
 
-	__int64 now = (temp.QuadPart - start.QuadPart) / fFreq.QuadPart;
+	int now = (int)(GetTickCount64() - _startTime) / 1000;
 
 	Buffer_Clear();
 
 	Sprite_Draw();
 
 	if (now > 2)
-		bWinSceneEnd = true;
+	{
+		_pSceneManager->ChangeScene(eState::CREATETITLE);
+	}
 }
 
 void CWinScene::Sprite_Draw()
@@ -33,7 +36,4 @@ void CWinScene::Sprite_Draw()
 	}
 }
 
-bool CWinScene::GetWindSceneEnd()
-{
-	return this->bWinSceneEnd;
-}
+

@@ -18,4 +18,6 @@ public:
 	bool Action();
 
 	void Render();
+
+	void CheckCollision();
 };

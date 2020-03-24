@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "CBaseScene.h"
+#include "CSceneManager.h"
 
 class CWinScene : public CBaseScene
 {
@@ -16,15 +17,14 @@ private:
 	};
 
 	bool bWinSceneEnd;
-	LARGE_INTEGER fFreq;
-	LARGE_INTEGER start;
+	DWORD _startTime;
+	CSceneManager* _pSceneManager;
 
 public:
-	CWinScene();
+	CWinScene(CSceneManager* SceneManager);
 
 	void Update();
 
 	void Sprite_Draw();
 
-	bool GetWindSceneEnd();
 };

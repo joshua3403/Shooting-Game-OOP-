@@ -32,7 +32,7 @@ bool CEnemyClass::Action()
 
 	if (shootTimte >= _ShootBulletTime)
 	{
-		_pGameScene->ObjectList.push_back(new CBulletObject(_pGameScene, CBulletObject::eWhoShoot::ENEMY, e_ObjectType::BULLET, s_RelativePosition.iX, s_RelativePosition.iX + 1, 1, _iDamage));
+		_pGameScene->ObjectList.push_back(new CBulletObject(_pGameScene, CBulletObject::eWhoShoot::ENEMY, e_ObjectType::BULLET, s_RelativePosition.iX, s_RelativePosition.iY + 1, 1, _iDamage));
 		_startShootTime = GetTickCount64();
 	}
 
@@ -76,13 +76,12 @@ void CEnemyClass::CheckDie()
 	if (_iHp == 0)
 	{
 		int percent = rand() % 100;
-		if (percent < 20)
+		if (percent < 80)
 		{
 			_pGameScene->ObjectList.push_back(new CPotionObject(_pGameScene, s_RelativePosition.iX, s_RelativePosition.iY));
 		}
 
 		_pGameScene->GetEnemyDelete(this);
-		delete this;
 	}
 }
 

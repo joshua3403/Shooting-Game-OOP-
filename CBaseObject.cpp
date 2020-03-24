@@ -21,6 +21,11 @@ void CBaseObject::TakeDamage(int damage)
 	_iHp -= damage;
 }
 
+void CBaseObject::TakeHp(int hp)
+{
+	_iHp += hp;
+}
+
 int CBaseObject::GetDamage()
 {
 	return this->_iDamage;
